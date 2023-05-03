@@ -13,7 +13,7 @@
   <body>
   
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="{{url_for('home')}}">Space Managment</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -32,6 +32,9 @@
           <li class="nav-item active">
             <a class="nav-link" href="{{url_for('lab')}}">Labs <span class="sr-only">(current)</span></a>
           </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{{url_for('room')}}">Room <span class="sr-only">(current)</span></a>
+          </li>
 
 
 
@@ -41,7 +44,50 @@
       </div>
     </nav>
 
-    <h1>This is lab page</h1>
+    <div class="container" >
+      <div class="container mr-5 mt-5 p-5 pl-5 bg-light center">
+        <form method="POST">
+          <div class="form-group">
+            <b><h1><label for="exampleFormControlSelect1">Select Lab Name</label></h1> </b>
+            <select class="form-control" id="exampleFormControlSelect1" name="ldap_id">
+              <option value="" disabled selected>Select a Lab</option>
+              <option>CC 402</option>
+              <option>CC 117</option>
+              <option>CC 301</option>
+              <option>CC 316</option>
+              <option>CC 218</option>
+              <option>CC 405</option>
+              <option>CFILT</option>
+              <option>SIA 20</option>
+              <option>SIB 401</option>
+              <option>SIC101/SIC102</option>
+              <option>SIC 210</option>
+              <option>SIC 204</option>
+              <option>SIC 212</option>
+              <option>SIC 312</option>
+              <option>SIC 209</option>
+              <option>SIC 309</option>
+              <option>SIC 310</option>
+              <option>SIC 313</option>
+            </select>
+          </div>
+          <!-- <input type="submit" value="Submit"> -->
+          <button type="submit" class="btn btn-success" value="Submit">Submit</button>
+          
+        </form>
+      </div>
+        <div id="result-container" class="container mr-5 mt-5 p-5 center">
+        
+        {% if flag %}
+        {{data2|safe}}
+        {% else %}
+          <h1>Data not found in Page</h1>
+        {% endif %}
+      
+      
+        </div>
+      
+      </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -17,7 +17,7 @@
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="{{url_for('home')}}">Space Managment</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -36,6 +36,9 @@
           <li class="nav-item active">
             <a class="nav-link" href="{{url_for('lab')}}">Labs <span class="sr-only">(current)</span></a>
           </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{{url_for('room')}}">Room <span class="sr-only">(current)</span></a>
+          </li>
 
 
 
@@ -49,7 +52,7 @@
       <div class="container mr-5 mt-5 p-5 pl-5 bg-light center">
         <form method="POST">
           <div class="form-group">
-            <label for="exampleInputPassword1">LDAP ID</label>
+            <label for="exampleInputPassword1"><h5>LDAP ID</h5></label>
             <input type="text" class="form-control" id="ldapid" name="ldap_id" placeholder="LDAP ID without @iitb.ac.in">
           </div>
           <!-- <input type="submit" value="Submit"> -->

@@ -17,7 +17,7 @@
   <body>
     
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="{{url_for('home')}}">Space Managment</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -36,7 +36,9 @@
           <li class="nav-item active">
             <a class="nav-link" href="{{url_for('lab')}}">Labs <span class="sr-only">(current)</span></a>
           </li>
-
+          <li class="nav-item active">
+            <a class="nav-link" href="{{url_for('room')}}">Room <span class="sr-only">(current)</span></a>
+          </li>
 
 
 
@@ -49,25 +51,68 @@
 <div class="container mr-5 mt-5 p-5 bg-light center">
   <form method="POST">
     <div class="form-group">
-      <label for="exampleInputPassword1">LDAP ID</label>
-      <input type="text" class="form-control" id="ldapid" name="ldap_id" placeholder="LDAP ID without @iitb.ac.in">
+      <b><h5><label for="exampleFormControlSelect1">Select Faculty Name</label></h5> </b>
+      <select class="form-control" id="exampleFormControlSelect1" name="ldap_id" >
+        <option value="" disabled selected>Select a faculty member</option>
+        <option>Abhiram Ranade</option>
+        <option>Abir De</option>
+        <option>Ajit A Diwan</option>
+        <option>Ajit Rajwade</option>
+        <option>Akash Kumar</option>
+        <option>Akshay S</option>
+        <option>Amitabha A Sanyal</option>
+        <option>Ashutosh Gupta</option>
+        <option>Ashwin Gumaste</option>
+        <option>Bernard Menezes</option>
+        <option>Bharat G Adsul</option>
+        <option>Bhaskaran Raman</option>
+        <option>Biswabandan Panda</option>
+        <option>Ganesh Ramkrishnan</option>
+        <option>G Sivakumar</option>
+        <option>Kameswari Chebrolu</option>
+        <option>Kavi Arya</option>
+        <option>Krishna Shankar Narayanan</option>
+        <option>Manas Thakur</option>
+        <option>Manoj Prabhakaran</option>
+        <option>Milind A Sohoni</option>
+        <option>Mythili Vutukuru</option>
+        <option>Nutan Limaye</option>
+        <option>Om Damani</option>
+        <option>Parag Kumar Chaudhuri</option>
+        <option>Preethi Jyothi</option>
+        <option>Purushottam Kulkarni</option>
+        <option>Pushpak P Bhattacharya</option>
+        <option>Rohit Gurjar</option>
+        <option>Rushikesh K Joshi</option>
+        <option>Saisundararaman Vishwanathan</option>
+        <option>Sharat Chandran</option>
+        <option>Soumen Chakrabarti</option>
+        <option>Siddhartha Chaudhuri</option>
+        <option>Shivaram Kalyanakrishnan</option>
+        <option>S Sudarshan</option>
+        <option>Sujoy Bhore</option>
+        <option>Sunita Sarawagi</option>
+        <option>Suyash P Awate</option>
+        <option>Swaprava Nath</option>
+        <option>Uday Khedker</option>
+        <option>Umesh Bellur</option>
+        <option>Varsha Apte</option>
+        <option>Vinay Joseph Ribeiro</option>
+        <option>Virendra Singh</option>
+      </select>
     </div>
     <!-- <input type="submit" value="Submit"> -->
-    <button type="submit" class="btn btn-success" value="Submit">Success</button>
+    <button type="submit" class="btn btn-success" value="Submit">Submit</button>
     
   </form>
 </div>
 
-<div class="container mr-5 mt-5 p-5 bg-light center">
-  <h1>This is faculty page</h1>
-</div>
 
 
 
-
-  <div id="result-container" class="container mr-5 mt-5 p-5 bg-light center">
+  <div id="result-container1" class="container mr-5 mt-5 p-5  center">
   {% if flag %}
-  {{data|safe}}
+  {{data2|safe}}
   {% else %}
     <h1>Data not found in Page</h1>
   {% endif %}
