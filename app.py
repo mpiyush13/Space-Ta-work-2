@@ -40,7 +40,7 @@ def home():
         print(f"This is value of p_col{p_col}")           
         
         if p_col!=-1:
-            df = pd.DataFrame({'Lab Name': [df.columns.tolist()[p_col]], 'Custodian': [df.iloc[0, p_col]], 'PI': [df.iloc[1, p_col]]})
+            df = pd.DataFrame({'LDAP ID': [LDAP_ID],'Lab Name': [df.columns.tolist()[p_col]], 'Custodian': [df.iloc[0, p_col]], 'PI': [df.iloc[1, p_col]]})
            
             data1=df.to_html(index=False,sparsify=False)
             print(data1)
@@ -134,7 +134,7 @@ def lab():
         return render_template('Lab.html', data2=table_with_styles,flag=True)
         return render_template('Lab.html', data2=df.to_html(),flag=True)
             
-    return render_template('Lab.html', data=df.to_html(),Flag=True)
+    return render_template('Lab.html', data=df.to_html(),Flag=1)
 @app.route("/custodian", methods = ['GET', 'POST'])
 def custodian():
     SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
@@ -163,7 +163,7 @@ def custodian():
 def room():
     SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
     # SHEET_ID = ''
-    SHEET_NAME = 'Student Data'
+    SHEET_NAME = 'Room Data'
     df_json=''
     print('HELLO')
     df = pd.DataFrame([])
@@ -181,7 +181,34 @@ def room():
         
         print(df.head())
         df_json = df.to_json(orient='records')
+        rows = df[(df.iloc[:, 2] == str(LDAP_ID)) & (df.iloc[:, 4].isin(['N/A', 'Vacant']))]
 
-    return render_template('Room.html', data=df.to_html())
+        # row = df[df.iloc[:, 2] == ]
+        # if not row.empty and row.iloc[0, 4] in ['N/A', 'Vacant']:
+        #     print(row.iloc[0, 0])
+        list=[]
+        for i, row in rows.iterrows():
+          list.append(row.iloc[0])
+        print(list)
+        df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
+        print("piyush")
+        data1=df.to_html(index=False,sparsify=False)
+        print(data1)
+        table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
+    .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
+    .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
+        return render_template('Room.html', data2=table_with_styles,flag=True)
+        return render_template('Room.html', data2=df.to_html(),flag=True);
+        
+        # column=df['Space Type']
+        # list=[]
+        # for col in len(column):
+        #     if str(column[col])==str(LDAP_ID) and (str(df.iloc[col, 4])=="NA" or str(df.iloc[col, 4])=="vacant") :
+        #         list.append(df.iloc[col, 4])
+        # print(list)       
+        print("piyush")     
+        
+
+    return render_template('Room.html', data2=df.to_html(),flag=True)
 if __name__ == '__main__':
     app.run(host='localhost', port=8000)

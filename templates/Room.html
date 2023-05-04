@@ -30,9 +30,7 @@
         <li class="nav-item active">
           <a class="nav-link" href="{{url_for('faculty')}}">Faculty<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="{{url_for('custodian')}}">Custodian<span class="sr-only">(current)</span></a>
-        </li>
+       
         <li class="nav-item active">
           <a class="nav-link" href="{{url_for('lab')}}">Labs <span class="sr-only">(current)</span></a>
         </li>
@@ -52,9 +50,23 @@
     <div class="container mr-5 mt-5 p-5 pl-5 bg-light center">
       <form method="POST">
         <div class="form-group">
-          <label for="exampleInputPassword1"><h5>LDAP ID</h5></label>
-          <input type="text" class="form-control" id="ldapid" name="ldap_id" placeholder="LDAP ID without @iitb.ac.in">
-        </div>
+            <h5><label for="exampleFormControlSelect1">Select Room Type to check availability</label></h5>
+            <select class="form-control" id="exampleFormControlSelect1" name="ldap_id">
+              <option value="" disabled selected>Select Room Type</option>
+              <option>Seminar Hall</option>
+              <option>Teaching Lab</option>
+              <option>Seminar Room</option>
+              <option>Classroom</option>
+              <option>PG first year Lab</option>
+              <option>Faculty room</option>
+              <option>RS Room</option>
+              <option>Meeting room</option>
+              <option>Storage</option>
+              <option>Research lab</option>
+              <option>Department Office</option>
+              <option>Lecture Hall</option>
+            </select>
+          </div>
         <!-- <input type="submit" value="Submit"> -->
         <button type="submit" class="btn btn-success" value="Submit">Submit</button>
         
