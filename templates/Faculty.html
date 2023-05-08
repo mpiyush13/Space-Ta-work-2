@@ -15,7 +15,16 @@
   </head>
 
   <body>
-    
+    <script>
+      function showInputField() {
+        var selectedOption = document.getElementById("dropdown").value;
+        if (selectedOption == "No of Student") {
+          document.getElementById("inputField").style.display = "block";
+        } else {
+          document.getElementById("inputField").style.display = "none";
+        }
+      }
+    </script>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="{{url_for('home')}}">Space Managment</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -107,7 +116,7 @@
         </div>
         <div class="col">
           <label for="exampleInputPassword1"><h5>Find</h5></label>
-          <select class="form-control" id="exampleFormControlSelect1" name="find">
+          <select class="form-control" id="dropdown" name="find" onchange="showInputField()">
             <option value="" disabled selected>Select</option>
             <option>No of Student</option>
 
@@ -116,8 +125,19 @@
            
           </select>
         </div>
+       
       </div>
       
+      <div class="form-group" id="inputField" style="display:none;">
+        <label for="exampleFormControlSelect1">Example select</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
      
     </div>
     <!-- <input type="submit" value="Submit"> -->
