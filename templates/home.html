@@ -38,7 +38,9 @@
             <a class="nav-link" href="{{url_for('room')}}">RoomStatus <span class="sr-only">(current)</span></a>
           </li>
 
-
+          <li class="nav-item active">
+            <a class="nav-link" href="{{url_for('status')}}" >Status of form <span class="sr-only">(current)</span></a>
+          </li>
 
 
 
@@ -49,12 +51,28 @@
     <div class="container" >
       <div class="container mr-5 mt-5 p-5 pl-5 bg-light center">
         <form method="POST">
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="exampleInputPassword1"><h5>LDAP ID</h5></label>
             <input type="text" class="form-control" id="ldapid" name="ldap_id" placeholder="LDAP ID without @iitb.ac.in">
+          </div> -->
+          <div class="row">
+            <div class="col">
+              <label for="exampleInputPassword1"><h5>LDAP ID</h5></label>
+            <input type="text" class="form-control" id="ldapid" name="ldap_id" placeholder="LDAP ID without @iitb.ac.in">
+            </div>
+            <div class="col">
+              <label for="exampleInputPassword1"><h5>Find</h5></label>
+              <select class="form-control" id="exampleFormControlSelect1" name="find">
+                <option value="" disabled selected>Select</option>
+                <option>PI of Student</option>
+
+                <option>Lab Name</option>
+               
+              </select>
+            </div>
           </div>
           <!-- <input type="submit" value="Submit"> -->
-          <button type="submit" class="btn btn-success" value="Submit">Submit</button>
+          <button type="submit" class="btn my-5 btn-success" value="Submit">Submit</button>
           
         </form>
       </div>
