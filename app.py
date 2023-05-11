@@ -75,6 +75,7 @@ def faculty():
     if request.method == "POST":
         LDAP_ID = request.form['ldap_id']
         findin = request.form['find']
+        StudentType= request.form['StudentType']
         
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
@@ -94,7 +95,16 @@ def faculty():
         df_json = df.to_json(orient='records')
         if p_row!=-1:
             if str(findin)=='No of Student':
-                df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of Student': [df.iloc[p_row, 3]]})
+                if str(StudentType)=="M.tech":
+                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of M.Tech Student': [df.iloc[p_row, 4]]})
+                if str(StudentType)=="B.Tech":
+                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of B.tech Student': [df.iloc[p_row, 9]]}) 
+                if str(StudentType)=="MS":
+                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of MS Student': [df.iloc[p_row, 10]]})   
+                if str(StudentType)=="Phd":
+                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of Phd Student': [df.iloc[p_row, 8]]})
+                if str(StudentType)=="Total No of Students":
+                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'Total No of Student': [df.iloc[p_row, 3]]})   
             if str(findin)=='No of Labs':
                 df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'No of Labs': [df.iloc[p_row, 1]]})
             if str(findin)=='Lab Name':
@@ -114,20 +124,24 @@ def lab():
     SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
     # SHEET_ID = ''
     SHEET_NAME = 'Student Data'
+    SHEET_NAME2='Room Data'
     df_json=''
     print('HELLO')
     df = pd.DataFrame([])
     if request.method == "POST":
         LDAP_ID = request.form['ldap_id']
-        
+        findoption = request.form['find']
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
         rows = worksheet.get_all_records()
+        worksheet = spreadsheet.worksheet(SHEET_NAME2)
+        rows2 = worksheet.get_all_records()
         # print(rows[:5])
 
         # print('==============================')
         df = pd.DataFrame(rows)
+        df2 = pd.DataFrame(rows2)
         print(df.head())
         df_json = df.to_json(orient='records')
         # p_col=-1
@@ -136,17 +150,38 @@ def lab():
         #            p_col=col
         # print(f"This is value of p_row{p_col}")
         # if p_col!=-1:
+        if str(findoption)=="No of PI":
+            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]], 'No of PIs': [df[LDAP_ID][2]]})
+        if str(findoption)=="PI Name":
+            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]], 'PI Name': [df[LDAP_ID][1]]})
+       
+        if str(findoption)=="No of Total Student":
+            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],
+                           'No of Total Student': [df[LDAP_ID][3]]})
+        if str(findoption)=="No of M.Tech Student":
+            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'M.Tech Student': [df[LDAP_ID][4]]})
+        if str(findoption)=="No of B.Tech Student":
+            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],
+                           'B.Tech Student': [df[LDAP_ID][12]]})
+        if str(findoption)=="No of MS Student":
+            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'MS Student': [df[LDAP_ID][8]]})
+        if str(findoption)=="No of Phd Student":
+            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'Phd Student': [df[LDAP_ID][13]]})
+            
+        if str(findoption)=="Available Capacity of Lab":
+            print("xkjvbffkj")
+            search_result = df2.loc[df2['Room No.'] == str(LDAP_ID)]
+            difference = search_result.iloc[0][6] - search_result.iloc[0][5]
+            df=pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],f'Available Capacity ': [difference]})
+            
         
-        df = pd.DataFrame({'Custodian Name': [df[LDAP_ID][0]], 'No of PIs': [df[LDAP_ID][2]], 'PI Name': [df[LDAP_ID][1]],
-                           'No of Student': [df[LDAP_ID][3]],'M.Tech Student': [df[LDAP_ID][4]],'MS Student': [df[LDAP_ID][8]],
-                           'B.Tech Student': [df[LDAP_ID][12]],'Phd Student': [df[LDAP_ID][13]]})
         data1=df.to_html(index=False,sparsify=False)
-        print(data1)
+        # print(data1)
         table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
     .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
         return render_template('Lab.html', data2=table_with_styles,flag=True)
-        return render_template('Lab.html', data2=df.to_html(),flag=True)
+       
             
     return render_template('Lab.html', data=df.to_html(),Flag=1)
 @app.route("/custodian", methods = ['GET', 'POST'])
