@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import gspread
+import re
 import pandas as pd
 
 
@@ -236,7 +237,8 @@ def room():
     df = pd.DataFrame([])
     if request.method == "POST":
         LDAP_ID = request.form['ldap_id']
-        
+        Floor = request.form['floor']
+        Bgd = request.form['bgd']
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
@@ -257,15 +259,38 @@ def room():
         for i, row in rows.iterrows():
           list.append(row.iloc[0])
         print(list)
-        df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
-        print("piyush")
-        data1=df.to_html(index=False,sparsify=False)
-        print(data1)
-        table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
-    .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
-    .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
-        return render_template('Room.html', data2=table_with_styles,flag=True)
-        return render_template('Room.html', data2=df.to_html(),flag=True);
+        if str(Bgd)=="New CSE":
+            newlist=[]
+            for l in list:
+                if "CC" in l and Floor==str(re.search(r'\d', l).group()):
+                    newlist.append(l)
+            list=newlist       
+            df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
+            print("piyush")
+            data1=df.to_html(index=False,sparsify=False)
+            print(data1)
+            table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
+            .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
+           .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
+            return render_template('Room.html', data2=table_with_styles,flag=True)
+            return render_template('Room.html', data2=df.to_html(),flag=True);
+        if str(Bgd)=="Kresit":
+            newlist=[]
+            for l in list:
+                if "CC" not in l and Floor==str(re.search(r'\d', l).group()):
+                    newlist.append(l)
+            list=newlist
+            df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
+            print("piyush")
+            data1=df.to_html(index=False,sparsify=False)
+            print(data1)
+            table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
+            .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
+           .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
+            return render_template('Room.html', data2=table_with_styles,flag=True)
+            return render_template('Room.html', data2=df.to_html(),flag=True);
+            
+        
         
         # column=df['Space Type']
         # list=[]
