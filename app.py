@@ -70,12 +70,15 @@ def faculty():
     # SHEET_ID = ''
     SHEET_NAME = 'Faculty Data'
     df_json=''
-    print('HELLO')
+    print('Control come into faculty')
     df = pd.DataFrame([])
     if request.method == "POST":
         LDAP_ID = request.form['ldap_id']
         findin = request.form['find']
-        StudentType= request.form['StudentType']
+        StudentType=''
+        if str(findin)=='No of Student':
+            StudentType= request.form['StudentType']
+        
         
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
@@ -86,12 +89,12 @@ def faculty():
         # print('==============================')
         df = pd.DataFrame(rows)
         print("This is Faculty information")
-        print(df.head())
+        # print(df.head())
         p_row=-1
         for i in range(len(df)):
           if str(df.iloc[i, 0])==str(LDAP_ID):
               p_row=i
-        print(f"This is value of p_row{p_row}")
+        print(f"This is value of p_row {p_row}")
         df_json = df.to_json(orient='records')
         if p_row!=-1:
             if str(findin)=='No of Student':
@@ -106,11 +109,14 @@ def faculty():
                 if str(StudentType)=="Total No of Students":
                     df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'Total No of Student': [df.iloc[p_row, 3]]})   
             if str(findin)=='No of Labs':
+                print("This is for test purpose")
                 df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'No of Labs': [df.iloc[p_row, 1]]})
+                print(df)
             if str(findin)=='Lab Name':
                 df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'Lab Name': [df.iloc[p_row, 2]]})
             
             data1=df.to_html(index=False,sparsify=False)
+            print("Here data will print ")
             print(data1)
             table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
@@ -228,7 +234,7 @@ def status():
         # print('==============================')
         df = pd.DataFrame(rows)
         start_row = 17
-        end_row = 500
+        end_row = 761
 
 # Filter the DataFrame to include only the rows in the specified range with sum of second column onwards >= 1
         filtered_df = df.iloc[start_row:end_row+1][(df.iloc[start_row:end_row+1].iloc[:,1:].sum(axis=1)) >= 1]
