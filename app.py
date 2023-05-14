@@ -18,8 +18,20 @@ def home():
     p_col=-1
     if request.method == "POST":
         LDAP_ID = request.form['ldap_id']
-        findin= request.form['find']
+        # findin= request.form['find']
+        PIs='off'
+        Lab='off'
+        print(f'Before the value of PIS is {PIs}')
+        print(f'Before the value of Lab is {Lab}')
+        if 'PIs' in request.form:
+            PIs = request.form.get('PIs')
+            print(f'the value of PIS is: {PIs}')
         
+        if 'Lab' in request.form:
+            Lab= request.form.get('Lab')
+            print(f'the value of Lab is: {Lab}')
+        print(f'After the value of PIS is {PIs}')
+        print(f'After the value of Lab is {Lab}')
         print(f"here is ldap id {LDAP_ID}")
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
@@ -31,7 +43,7 @@ def home():
         # print('==============================')
         
         df = pd.DataFrame(rows)
-        print(df.head())
+        # print(df.head())
         for i in range(len(df)):
           if str(df.iloc[i, 0])==str(LDAP_ID):
               p_row=i
@@ -43,14 +55,21 @@ def home():
         print(f"This is value of p_col{p_col}")           
         
         if p_col!=-1:
-            if str(findin)=='PI of Student':
+            # if str(findin)=='PI of Student':
+            #     df = pd.DataFrame({'LDAP ID': [LDAP_ID], 'PI of Student': [df.iloc[1, p_col]]})
+            # if str(findin)=='Lab Name':
+            #     df = pd.DataFrame({'LDAP ID': [LDAP_ID],'Lab Name': [df.columns.tolist()[p_col]]})
+            if PIs!='off' and Lab!='off':
+                df = pd.DataFrame({'LDAP ID': [LDAP_ID], 'PI of Student': [df.iloc[1, p_col]],'Lab Name': [df.columns.tolist()[p_col]]})
+            elif PIs!='off':
                 df = pd.DataFrame({'LDAP ID': [LDAP_ID], 'PI of Student': [df.iloc[1, p_col]]})
-            if str(findin)=='Lab Name':
+            elif Lab!='off':
                 df = pd.DataFrame({'LDAP ID': [LDAP_ID],'Lab Name': [df.columns.tolist()[p_col]]})
             
-           
+            else:
+                df = pd.DataFrame({'Student Status': ['Select Something'] })
             data1=df.to_html(index=False,sparsify=False)
-            print(data1)
+            # print(data1)
             table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
     .replace('<td', '<td style="border: 2px solid black;padding: 15px;"')
@@ -60,7 +79,7 @@ def home():
             df = pd.DataFrame({'Student Status': ['Student Record Not Found'] })
             return render_template('home.html', data=df.to_html(),flag=False)
             
-
+    
     return render_template('home.html', data=df.to_html(),flag=1)
 
 

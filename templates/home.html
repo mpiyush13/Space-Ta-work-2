@@ -1,4 +1,4 @@
-  <!doctype html>
+<!doctype html>
   <html lang="en">
 
   <head>
@@ -61,12 +61,10 @@
             <input type="text" class="form-control" id="ldapid" name="ldap_id" placeholder="LDAP ID without @iitb.ac.in">
             </div>
             <div class="col">
-              <label for="exampleInputPassword1"><h5>Find</h5></label>
-              <select class="form-control" id="exampleFormControlSelect1" name="find">
-                <option value="" disabled selected>Select</option>
-                <option>PI of Student</option>
-
-                <option>Lab Name</option>
+              <label><h5>Find:</h5></label><br>
+              <input type="checkbox" name="PIs" value="PI of Student"> <label>PI of Student</label><br>
+              <input type="checkbox" name="Lab" value="Lab Name"> <label>Lab Name</label><br>
+              
                
               </select>
             </div>
