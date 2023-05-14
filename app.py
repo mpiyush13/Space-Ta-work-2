@@ -93,10 +93,10 @@ def faculty():
     df = pd.DataFrame([])
     if request.method == "POST":
         LDAP_ID = request.form['ldap_id']
-        findin = request.form['find']
-        StudentType=''
-        if str(findin)=='No of Student':
-            StudentType= request.form['StudentType']
+        # findin = request.form['find']
+        # StudentType=''
+        # if str(findin)=='No of Student':
+        #     StudentType= request.form['StudentType']
         
         
         gc = gspread.service_account('keys.json')
@@ -110,31 +110,57 @@ def faculty():
         print("This is Faculty information")
         # print(df.head())
         p_row=-1
+        df1 = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]]})
         for i in range(len(df)):
           if str(df.iloc[i, 0])==str(LDAP_ID):
               p_row=i
         print(f"This is value of p_row {p_row}")
         df_json = df.to_json(orient='records')
         if p_row!=-1:
-            if str(findin)=='No of Student':
-                if str(StudentType)=="M.tech":
-                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of M.Tech Student': [df.iloc[p_row, 4]]})
-                if str(StudentType)=="B.Tech":
-                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of B.tech Student': [df.iloc[p_row, 9]]}) 
-                if str(StudentType)=="MS":
-                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of MS Student': [df.iloc[p_row, 10]]})   
-                if str(StudentType)=="Phd":
-                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of Phd Student': [df.iloc[p_row, 8]]})
-                if str(StudentType)=="Total No of Students":
-                    df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'Total No of Student': [df.iloc[p_row, 3]]})   
-            if str(findin)=='No of Labs':
-                print("This is for test purpose")
-                df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'No of Labs': [df.iloc[p_row, 1]]})
-                print(df)
-            if str(findin)=='Lab Name':
-                df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'Lab Name': [df.iloc[p_row, 2]]})
+            if 'Noflab' in request.form:
+                # PIs = request.form.get('Noflab')
+                   newdf=pd.DataFrame({ 'No of Labs': [df.iloc[p_row, 1]]})
+                   df1 = pd.concat([df1, newdf], axis=1)
+            if 'labname' in request.form:
+                   newdf=pd.DataFrame({'Lab Name': [df.iloc[p_row, 2]]})
+                   df1 = pd.concat([df1, newdf], axis=1)
+            if 'NofStudent' in request.form:
+                   if 'M.tech' in request.form:
+                       newdf=pd.DataFrame({'No of M.Tech Student': [df.iloc[p_row, 4]]})
+                       df1 = pd.concat([df1, newdf], axis=1)
+                       
+                   if 'B.Tech' in request.form:
+                       newdf=pd.DataFrame({ 'No of B.tech Student': [df.iloc[p_row, 9]]})
+                       df1 = pd.concat([df1, newdf], axis=1)
+                   if 'MS' in request.form:
+                       newdf=pd.DataFrame({ 'No of MS Student': [df.iloc[p_row, 10]]})
+                       df1 = pd.concat([df1, newdf], axis=1)
+                   if 'Phd' in request.form:
+                       newdf=pd.DataFrame({ 'No of Phd Student': [df.iloc[p_row, 8]]})
+                       df1 = pd.concat([df1, newdf], axis=1)
+                   if 'TotalStudent' in request.form:
+                       newdf=pd.DataFrame({ 'Total No of Student': [df.iloc[p_row, 3]]})
+                       df1 = pd.concat([df1, newdf], axis=1)
+                
+            # if str(findin)=='No of Student':
+            #     if str(StudentType)=="M.tech":
+            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of M.Tech Student': [df.iloc[p_row, 4]]})
+            #     if str(StudentType)=="B.Tech":
+            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of B.tech Student': [df.iloc[p_row, 9]]}) 
+            #     if str(StudentType)=="MS":
+            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of MS Student': [df.iloc[p_row, 10]]})   
+            #     if str(StudentType)=="Phd":
+            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of Phd Student': [df.iloc[p_row, 8]]})
+            #     if str(StudentType)=="Total No of Students":
+            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'Total No of Student': [df.iloc[p_row, 3]]})   
+            # if str(findin)=='No of Labs':
+            #     print("This is for test purpose")
+            #     df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'No of Labs': [df.iloc[p_row, 1]]})
+            #     print(df)
+            # if str(findin)=='Lab Name':
+            #     df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'Lab Name': [df.iloc[p_row, 2]]})
             
-            data1=df.to_html(index=False,sparsify=False)
+            data1=df1.to_html(index=False,sparsify=False)
             print("Here data will print ")
             print(data1)
             table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
@@ -154,8 +180,8 @@ def lab():
     print('HELLO')
     df = pd.DataFrame([])
     if request.method == "POST":
-        LDAP_ID = request.form['ldap_id']
-        findoption = request.form['find']
+        # LDAP_ID = request.form['ldap_id']
+        # findoption = request.form['find']
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
@@ -175,32 +201,113 @@ def lab():
         #            p_col=col
         # print(f"This is value of p_row{p_col}")
         # if p_col!=-1:
-        if str(findoption)=="No of PI":
-            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]], 'No of PIs': [df[LDAP_ID][2]]})
-        if str(findoption)=="PI Name":
-            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]], 'PI Name': [df[LDAP_ID][1]]})
-       
-        if str(findoption)=="No of Total Student":
-            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],
-                           'No of Total Student': [df[LDAP_ID][3]]})
-        if str(findoption)=="No of M.Tech Student":
-            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'M.Tech Student': [df[LDAP_ID][4]]})
-        if str(findoption)=="No of B.Tech Student":
-            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],
-                           'B.Tech Student': [df[LDAP_ID][12]]})
-        if str(findoption)=="No of MS Student":
-            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'MS Student': [df[LDAP_ID][8]]})
-        if str(findoption)=="No of Phd Student":
-            df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'Phd Student': [df[LDAP_ID][13]]})
+        
+        Lablist=[]
+        if 'CC 402' in request.form:
+            Lablist.append('CC 402')
+        if 'CC 117' in request.form:
+            Lablist.append('CC 117')
+        if 'CC 301' in request.form:
+            Lablist.append('CC 301')
+        if 'CC 316' in request.form:
+            Lablist.append('CC 316')   
+        if 'CC 218' in request.form:
+            Lablist.append('CC 218')   
+        if 'CC 405' in request.form:
+            Lablist.append('CC 405')
+        if 'CFILT' in request.form:
+            Lablist.append('CFILT')  
+        if 'SIA 20' in request.form:
+            Lablist.append('SIA 20') 
+        if 'SIB 401' in request.form:
+            Lablist.append('SIB 401')
+        if 'SIA 20' in request.form:
+            Lablist.append('SIA 20')
+        if 'SIC101/SIC102' in request.form:
+            Lablist.append('SIC101/SIC102') 
+        if 'SIC 210' in request.form:
+            Lablist.append('SIC 210')
+        if 'SIC 204' in request.form:
+            Lablist.append('SIC 204')
+        if 'SIC 212' in request.form:
+            Lablist.append('SIC 212')
+        if 'SIC 312' in request.form:
+            Lablist.append('SIC 312')
+        if 'SIC 209' in request.form:
+            Lablist.append('SIC 209')
+        if 'SIC 309' in request.form:
+            Lablist.append('SIC 309')
+        if 'SIC 310' in request.form:
+            Lablist.append('SIC 310')
+        if 'SIC 313' in request.form:
+            Lablist.append('SIC 313')    
+        df3=pd.DataFrame()   
+        for LDAP_ID in Lablist:
+            new_column = pd.DataFrame({f'Custodian Name': [df[LDAP_ID][0]]})
+            new_column2 = pd.DataFrame({f'Lab Name': [LDAP_ID]})
+            df1=pd.DataFrame()
             
-        if str(findoption)=="Available Capacity of Lab":
-            print("xkjvbffkj")
-            search_result = df2.loc[df2['Room No.'] == str(LDAP_ID)]
-            difference = search_result.iloc[0][6] - search_result.iloc[0][5]
-            df=pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],f'Available Capacity ': [difference]})
+
+            # concatenate the new DataFrame with the empty DataFrame
+            df1 = pd.concat([df1, new_column], axis=1)
+            df1 = pd.concat([df1, new_column2], axis=1)
+            if 'No of PI' in request.form:
+                new_column = pd.DataFrame({'No of PIs': [df[LDAP_ID][2]]})
+                df1 = pd.concat([df1, new_column], axis=1)
+            if 'PI Name' in request.form:
+                new_column = pd.DataFrame({'PI Name': [df[LDAP_ID][1]]})
+                df1 = pd.concat([df1, new_column], axis=1)
+                
+            if 'No of Total Student' in request.form:
+                new_column = pd.DataFrame({'No of Total Student': [df[LDAP_ID][3]]})
+                df1 = pd.concat([df1, new_column], axis=1)
+            if 'No of M.Tech Student' in request.form:
+                new_column = pd.DataFrame({'M.Tech Student': [df[LDAP_ID][4]]})
+                df1 = pd.concat([df1, new_column], axis=1)
+            if 'No of B.Tech Student' in request.form:
+                new_column = pd.DataFrame({'B.Tech Student': [df[LDAP_ID][12]]})
+                df1 = pd.concat([df1, new_column], axis=1)
+            if 'No of MS Student' in request.form:
+                new_column = pd.DataFrame({'MS Student': [df[LDAP_ID][8]]})
+                df1 = pd.concat([df1, new_column], axis=1)
+            if 'No of Phd Student' in request.form:
+                new_column = pd.DataFrame({'Phd Student': [df[LDAP_ID][13]]})
+                df1 = pd.concat([df1, new_column], axis=1)
+            if 'Available Capacity of Lab' in request.form:
+                search_result = df2.loc[df2['Room No.'] == str(LDAP_ID)]
+                difference = search_result.iloc[0][6] - search_result.iloc[0][5]
+                new_column = pd.DataFrame({f'Available Capacity ': [difference]})
+                df1 = pd.concat([df1, new_column], axis=1)
+            df3 = pd.concat([df1, df3], axis=0, ignore_index=True)
+   
+            
+         
+        # if str(findoption)=="No of PI":
+        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]], 'No of PIs': [df[LDAP_ID][2]]})
+        # if str(findoption)=="PI Name":
+        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]], 'PI Name': [df[LDAP_ID][1]]})
+       
+        # if str(findoption)=="No of Total Student":
+        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],
+        #                    'No of Total Student': [df[LDAP_ID][3]]})
+        # if str(findoption)=="No of M.Tech Student":
+        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'M.Tech Student': [df[LDAP_ID][4]]})
+        # if str(findoption)=="No of B.Tech Student":
+        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],
+        #                    'B.Tech Student': [df[LDAP_ID][12]]})
+        # if str(findoption)=="No of MS Student":
+        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'MS Student': [df[LDAP_ID][8]]})
+        # if str(findoption)=="No of Phd Student":
+        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'Phd Student': [df[LDAP_ID][13]]})
+            
+        # if str(findoption)=="Available Capacity of Lab":
+        #     print("xkjvbffkj")
+        #     search_result = df2.loc[df2['Room No.'] == str(LDAP_ID)]
+        #     difference = search_result.iloc[0][6] - search_result.iloc[0][5]
+        #     df=pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],f'Available Capacity ': [difference]})
             
         
-        data1=df.to_html(index=False,sparsify=False)
+        data1=df3.to_html(index=False,sparsify=False)
         # print(data1)
         table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \

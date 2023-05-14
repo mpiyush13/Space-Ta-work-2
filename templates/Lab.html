@@ -47,44 +47,65 @@
     <div class="container" >
       <div class="container mr-5 mt-5 p-5 pl-5 bg-light center">
         <form method="POST">
+          <style>
+            #lab {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              grid-gap: 10px;
+            }
+          </style>
+          
           <div class="form-group">
-            <b><h5><label for="exampleFormControlSelect1">Select Lab Name</label></h5> </b>
-            <select class="form-control" id="exampleFormControlSelect1" name="ldap_id">
-              <option value="" disabled selected>Select a Lab</option>
-              <option>CC 402</option>
-              <option>CC 117</option>
-              <option>CC 301</option>
-              <option>CC 316</option>
-              <option>CC 218</option>
-              <option>CC 405</option>
-              <option>CFILT</option>
-              <option>SIA 20</option>
-              <option>SIB 401</option>
-              <option>SIC101/SIC102</option>
-              <option>SIC 210</option>
-              <option>SIC 204</option>
-              <option>SIC 212</option>
-              <option>SIC 312</option>
-              <option>SIC 209</option>
-              <option>SIC 309</option>
-              <option>SIC 310</option>
-              <option>SIC 313</option>
-            </select>
+            <b><h5><label for="lab">Select Lab Name</label></h5></b>
+            <div id="lab">
+              <label><input type="checkbox" name="CC 402" value="CC 402"> CC 402</label>
+              <label><input type="checkbox" name="CC 117" value="CC 117"> CC 117</label>
+              <label><input type="checkbox" name="CC 301" value="CC 301"> CC 301</label>
+              <label><input type="checkbox" name="CC 316" value="CC 316"> CC 316</label>
+              <label><input type="checkbox" name="CC 218" value="CC 218"> CC 218</label>
+              <label><input type="checkbox" name="CC 405" value="CC 405"> CC 405</label>
+              <label><input type="checkbox" name="CFILT" value="CFILT"> CFILT</label>
+              <label><input type="checkbox" name="SIA 20" value="SIA 20"> SIA 20</label>
+              <label><input type="checkbox" name="SIB 401" value="SIB 401"> SIB 401</label>
+              <label><input type="checkbox" name="SIC101/SIC102" value="SIC101/SIC102"> SIC101/SIC102</label>
+              <label><input type="checkbox" name="SIC 210" value="SIC 210"> SIC 210</label>
+              <label><input type="checkbox" name="SIC 204" value="SIC 204"> SIC 204</label>
+              <label><input type="checkbox" name="SIC 212" value="SIC 212"> SIC 212</label>
+              <label><input type="checkbox" name="SIC 312" value="SIC 312"> SIC 312</label>
+              <label><input type="checkbox" name="SIC 209" value="SIC 209"> SIC 209</label>
+              <label><input type="checkbox" name="SIC 309" value="SIC 309"> SIC 309</label>
+              <label><input type="checkbox" name="SIC 310" value="SIC 310"> SIC 310</label>
+              <label><input type="checkbox" name="SIC 313" value="SIC 313"> SIC 313</label>
+            </div>
           </div>
+          
           <div class="form-group">
-            <label for="exampleInputPassword1"><h5>Find</h5></label>
-                <select class="form-control" id="exampleFormControlSelect1" name="find">
-                  <option value="" disabled selected>Select</option>
-                  <option>No of PI</option>
-  
-                  <option>PI Name</option>
-                  <option>No of Total Student</option>
-  
-                  <option>No of M.Tech Student</option>
-                  <option>No of B.Tech Student</option>
-                  <option>No of MS Student</option>
-                  <option>No of Phd Student</option>
-                  <option>Available Capacity of Lab</option>
+            <style>
+              ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+              }
+              li {
+                margin-bottom: 5px;
+              }
+            </style>
+            
+            
+            <div class="form-group">
+              <b><h5>Find</h5></b>
+              <ul>
+                <li><label for="no_of_pi"><input type="checkbox" id="no_of_pi" name="No of PI" value="No of PI"> No of PI</label></li>
+                <li><label for="pi_name"><input type="checkbox" id="pi_name" name="PI Name" value="PI Name"> PI Name</label></li>
+                <li><label for="total_student"><input type="checkbox" id="total_student" name="No of Total Student" value="No of Total Student"> No of Total Student</label></li>
+                <li><label for="mtech_student"><input type="checkbox" id="mtech_student" name="No of M.Tech Student" value="No of M.Tech Student"> No of M.Tech Student</label></li>
+                <li><label for="btech_student"><input type="checkbox" id="btech_student" name="No of B.Tech Student" value="No of B.Tech Student"> No of B.Tech Student</label></li>
+                <li><label for="ms_student"><input type="checkbox" id="ms_student" name="No of MS Student" value="No of MS Student"> No of MS Student</label></li>
+                <li><label for="phd_student"><input type="checkbox" id="phd_student" name="No of Phd Student" value="No of Phd Student"> No of Phd Student</label></li>
+                <li><label for="lab_capacity"><input type="checkbox" id="lab_capacity" name="Available Capacity of Lab" value="Available Capacity of Lab"> Available Capacity of Lab</label></li>
+              </ul>
+            </div>
+            
   
                   
                  

@@ -115,31 +115,75 @@
       </select>
         </div>
         <div class="col">
+  
           <label for="exampleInputPassword1"><h5>Find</h5></label>
-          <select class="form-control" id="dropdown" name="find" onchange="showInputField()">
-            <option value="" disabled selected>Select</option>
-            <option>No of Student</option>
+  <div id="dropdown">
+    <div>
+      <input type="checkbox" id="no-of-student" name="NofStudent" value="No of Student">
+      <label for="no-of-student">No of Student</label>
+    </div>
+    <div>
+      <input type="checkbox" id="lab-name" name="labname" value="Lab Name">
+      <label for="lab-name">Lab Name</label>
+    </div>
+    <div>
+      <input type="checkbox" id="no-of-labs" name="Noflab" value="No of Labs">
+      <label for="no-of-labs">No of Labs</label>
+    </div>
+  </div>
+</div>
 
-            <option>Lab Name</option>
-            <option>No of Labs</option>
-           
-          </select>
-        </div>
-       
-      </div>
-      
-      <div class="form-group" id="inputField" style="display:none;">
-        <label for="exampleFormControlSelect1">Example select</label>
-        <select class="form-control" id="exampleFormControlSelect1" name="StudentType">
-          <option value="" disabled selected>Select</option>
-          <option>M.tech</option>
-          <option>B.Tech</option>
-          <option>MS</option>
-          <option>Phd</option>
-          <option>Total No of Students</option>
-        </select>
-      </div>
-     
+<div class="form-group" id="inputField" style="display:none;">
+  <label>Example select</label>
+  <div class="student-type-container">
+    <div>
+      <input type="checkbox" id="mtech" name="M.tech" value="M.tech">
+      <label for="mtech">M.tech</label> 
+    </div>
+    <div>
+      <input type="checkbox" id="btech" name="B.Tech" value="B.Tech">
+      <label for="btech">B.Tech</label>
+    </div>
+    <div>
+      <input type="checkbox" id="ms" name="MS" value="MS">
+      <label for="ms">MS</label>
+    </div>
+    <div>
+      <input type="checkbox" id="phd" name="Phd" value="Phd">
+      <label for="phd">Phd</label>
+    </div>
+    <div>
+      <input type="checkbox" id="total-students" name="TotalStudent" value="Total No of Students">
+      <label for="total-students">Total No of Students</label>
+    </div>
+  </div>
+</div>
+
+<style>
+.student-type-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.student-type-container div {
+  margin-right: 10px;
+}
+</style>
+
+<script>
+const noOfStudentCheckbox = document.getElementById("no-of-student");
+const inputFieldDiv = document.getElementById("inputField");
+
+noOfStudentCheckbox.addEventListener("change", () => {
+  if (noOfStudentCheckbox.checked) {
+    inputFieldDiv.style.display = "block";
+  } else {
+    inputFieldDiv.style.display = "none";
+  }
+});
+</script>
+
+
     </div>
     <!-- <input type="submit" value="Submit"> -->
     <button type="submit" class="btn btn-success" value="Submit">Submit</button>
