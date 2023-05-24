@@ -418,43 +418,202 @@ def room():
         
         
         finaldf = pd.DataFrame([])
+        finaldf2 = pd.DataFrame([])
+        finaldf3 = pd.DataFrame([])
         # print(df.head())
         df_json = df.to_json(orient='records')
         # LDAP_ID='Seminar Hall'
         #     rows = df[(df.iloc[:, 2] == str(LDAP_ID)) & (df.iloc[:, 4].isin(['N/A', 'Vacant']))]
         #     final.append(rows)
-        if 'New CSE' in request.form:
-            print("new cse sleectde")
-        if 'floorB' in request.form:
-            print("Floor B selectde")
+        
         
         if 'Seminar Hall' in request.form:
             print("Enter in seminar hall")
             classifications = {
                 "seminar": []
             }
-            # Iterate over the DataFrame
             for index, row in df.iterrows():
                value = row.iloc[1]  # Value in the second column
                if str(value) == "Seminar Hall":
                    classifications["seminar"].append(row)  
-   
-            # Create separate DataFrames for each classification
             seminar_df = pd.DataFrame(classifications["seminar"])
-            # lecture_hall_df = pd.DataFrame(classifications["lecture hall"])
-
-
-
-            print("seminar hall")
-            print(seminar_df['Room No.'],seminar_df['Common Name'])
-
-
-            # print(lecture_hall_df)         
-
-
-            
-       
-
+            finaldf = finaldf.append(seminar_df, ignore_index=True)        
+        if 'Teaching Lab' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Teaching Lab":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'Seminar Room' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Seminar Room":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'Classroom' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Classroom":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)    
+        if 'PG first year Lab' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "PG first year Lab":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'Faculty room' in request.form:
+            print("Enter in Faculty hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Faculty Room":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'RS Room' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "RS Room":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'Meeting room' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Meeting room":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'Storage' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Storage":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'Research lab' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Seminar Hall":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'Department Office' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Department Office":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        if 'Lecture Hall' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Lecture Hall":
+                   classifications["seminar"].append(row)  
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            finaldf = finaldf.append(seminar_df, ignore_index=True)
+        print(finaldf)
+        df=finaldf
+        if df.empty:
+            return render_template('Room.html', data2=df.to_html(),flag=True)
+        if 'New CSE' in request.form:
+            new_df = df[df.iloc[:, 0].str.contains('CC')]
+            finaldf2 = finaldf2.append(new_df, ignore_index=True)
+            print("new cse sleectde")
+        if 'Kresit' in request.form:
+            new_df = df[~df.iloc[:, 0].str.contains('CC')]
+            finaldf2 = finaldf2.append(new_df, ignore_index=True)
+            print("new cse sleectde")
+        df=finaldf2
+        if df.empty:
+            return render_template('Room.html', data2=df.to_html(),flag=True)
+        if 'floorB' in request.form:
+            selected_rows = df[df.iloc[:, 0].astype(str).str.extract(r'(\D)(\d*)$')[0] == 'B']
+            finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
+        if 'floorG' in request.form:
+            selected_rows = df[df.iloc[:, 0].astype(str).str.extract(r'(\D)(\d*)$')[0] == 'G']
+            finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
+        if 'floor1' in request.form:
+            selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b1', x) is not None)]
+            print("selected row:::")
+            print(selected_rows)
+            finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
+            print(finaldf3)
+        if 'floor2' in request.form:
+            selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b2', x) is not None)]
+            print("selected row:::")
+            print(selected_rows)
+            finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
+            print(finaldf3)
+        if 'floor3' in request.form:
+            selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b3', x) is not None)]
+            finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
+        if 'floor4' in request.form:
+            selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b4', x) is not None)]
+            finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
+        if 'floor5' in request.form:
+            selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b5', x) is not None)]
+            finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
+        df=finaldf3
+        if df.empty:
+            return render_template('Room.html', data2="<h1> Data Not found </h1>",flag=True)
+        selected_rows = df[(df.iloc[:, 4] == "vacant") | (df.iloc[:, 4] == "N/A")]
+        df=selected_rows
+        selected_columns = df[['Room No.', 'Common Name']]
+        df=selected_columns
+        data1=df.to_html(index=False,sparsify=False)
+        # print(data1)
+        table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
+            .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
+           .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
+        return render_template('Room.html', data2=table_with_styles,flag=True)
         # row = df[df.iloc[:, 2] == ]
         # if not row.empty and row.iloc[0, 4] in ['N/A', 'Vacant']:
         #     print(row.iloc[0, 0])
