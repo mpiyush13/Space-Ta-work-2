@@ -51,50 +51,127 @@
   <div class="container" >
     <div class="container mr-5 mt-5 p-5 pl-5 bg-light center">
       <form method="POST">
+       
         <div class="form-group">
-          <label for="exampleInputPassword1"><h5>Building</h5></label>
-              <select class="form-control" id="exampleFormControlSelect1" name="bgd">
-                <option value="" disabled selected>Select</option>
-                <option>New CSE</option>
-
-                <option>Kresit</option>
-               
-              </select>
-        </div>
+          <label for="exampleFormControlSelect1"><h5>Building</h5></label>
+          <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="buildingDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Select Building
+              </button>
+              <div class="dropdown-menu" aria-labelledby="buildingDropdown">
+                  <a class="dropdown-item" href="#">
+                      <input type="checkbox" name="bgd" value="New CSE">
+                      <label class="form-check-label">New CSE</label>
+                  </a>
+                  <a class="dropdown-item" href="#">
+                      <input type="checkbox" name="bgd" value="Kresit">
+                      <label class="form-check-label">Kresit</label>
+                  </a>
+              </div>
+          </div>
+      </div>
+      
+        
         <div class="form-group">
           <label for="exampleInputPassword1"><h5>Floor</h5></label>
-              <select class="form-control" id="exampleFormControlSelect1" name="floor">
-                <option value="" disabled selected>Select</option>
-                <option>1</option>
-
-                <option>2</option>
-                <option>3</option>
-
-                <option>4</option>
-                <option>5</option>
-
-                
-               
-              </select>
-        </div>
-        <div class="form-group">
-            <h5><label for="exampleFormControlSelect1">Select Room Type to check availability</label></h5>
-            <select class="form-control" id="exampleFormControlSelect1" name="ldap_id">
-              <option value="" disabled selected>Select Room Type</option>
-              <option>Seminar Hall</option>
-              <option>Teaching Lab</option>
-              <option>Seminar Room</option>
-              <option>Classroom</option>
-              <option>PG first year Lab</option>
-              <option>Faculty room</option>
-              <option>RS Room</option>
-              <option>Meeting room</option>
-              <option>Storage</option>
-              <option>Research lab</option>
-              <option>Department Office</option>
-              <option>Lecture Hall</option>
-            </select>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="floorDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Select
+            </button>
+            <div class="dropdown-menu" aria-labelledby="floorDropdown">
+              <a class="dropdown-item" href="#"><input type="checkbox" name="floor" value="1"> 1</a>
+              <a class="dropdown-item" href="#"><input type="checkbox" name="floor" value="2"> 2</a>
+              <a class="dropdown-item" href="#"><input type="checkbox" name="floor" value="3"> 3</a>
+              <a class="dropdown-item" href="#"><input type="checkbox" name="floor" value="4"> 4</a>
+              <a class="dropdown-item" href="#"><input type="checkbox" name="floor" value="5"> 5</a>
+            </div>
           </div>
+        </div>
+        
+
+        <div class="form-group">
+          <h5><label for="exampleFormControlSelect1">Select Room Type(s) to check availability</label></h5>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="roomTypeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Select Room Type
+            </button>
+            <div class="dropdown-menu" aria-labelledby="roomTypeDropdown">
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Seminar Hall" name="ldap_id[]">
+                <label class="form-check-label">
+                  Seminar Hall
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Teaching Lab" name="ldap_id[]">
+                <label class="form-check-label">
+                  Teaching Lab
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Seminar Room" name="ldap_id[]">
+                <label class="form-check-label">
+                  Seminar Room
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Classroom" name="ldap_id[]">
+                <label class="form-check-label">
+                  Classroom
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="PG first year Lab" name="ldap_id[]">
+                <label class="form-check-label">
+                  PG first year Lab
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Faculty room" name="ldap_id[]">
+                <label class="form-check-label">
+                  Faculty room
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="RS Room" name="ldap_id[]">
+                <label class="form-check-label">
+                  RS Room
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Meeting room" name="ldap_id[]">
+                <label class="form-check-label">
+                  Meeting room
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Storage" name="ldap_id[]">
+                <label class="form-check-label">
+                  Storage
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Research lab" name="ldap_id[]">
+                <label class="form-check-label">
+                  Research lab
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Department Office" name="ldap_id[]">
+                <label class="form-check-label">
+                  Department Office
+                </label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="Lecture Hall" name="ldap_id[]">
+                <label class="form-check-label">
+                  Lecture Hall
+                </label>
+              </div>
+          </div>
+          
+        
+
         <!-- <input type="submit" value="Submit"> -->
         <button type="submit" class="btn btn-success" value="Submit">Submit</button>
         
