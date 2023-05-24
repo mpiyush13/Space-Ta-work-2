@@ -403,9 +403,9 @@ def room():
     print('HELLO')
     df = pd.DataFrame([])
     if request.method == "POST":
-        LDAP_ID = request.form['ldap_id']
-        Floor = request.form['floor']
-        Bgd = request.form['bgd']
+        # LDAP_ID = request.form['ldap_id']
+        # Floor = request.form['floor']
+        # Bgd = request.form['bgd']
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
@@ -414,58 +414,94 @@ def room():
 
         # print('==============================')
         df = pd.DataFrame(rows)
+        final=[]
         
-        print(df.head())
+        
+        finaldf = pd.DataFrame([])
+        # print(df.head())
         df_json = df.to_json(orient='records')
-        rows = df[(df.iloc[:, 2] == str(LDAP_ID)) & (df.iloc[:, 4].isin(['N/A', 'Vacant']))]
+        # LDAP_ID='Seminar Hall'
+        #     rows = df[(df.iloc[:, 2] == str(LDAP_ID)) & (df.iloc[:, 4].isin(['N/A', 'Vacant']))]
+        #     final.append(rows)
+        if 'New CSE' in request.form:
+            print("new cse sleectde")
+        if 'floorB' in request.form:
+            print("Floor B selectde")
+        
+        if 'Seminar Hall' in request.form:
+            print("Enter in seminar hall")
+            classifications = {
+                "seminar": []
+            }
+            # Iterate over the DataFrame
+            for index, row in df.iterrows():
+               value = row.iloc[1]  # Value in the second column
+               if str(value) == "Seminar Hall":
+                   classifications["seminar"].append(row)  
+   
+            # Create separate DataFrames for each classification
+            seminar_df = pd.DataFrame(classifications["seminar"])
+            # lecture_hall_df = pd.DataFrame(classifications["lecture hall"])
+
+
+
+            print("seminar hall")
+            print(seminar_df['Room No.'],seminar_df['Common Name'])
+
+
+            # print(lecture_hall_df)         
+
+
+            
+       
 
         # row = df[df.iloc[:, 2] == ]
         # if not row.empty and row.iloc[0, 4] in ['N/A', 'Vacant']:
         #     print(row.iloc[0, 0])
-        list=[]
-        for i, row in rows.iterrows():
-          list.append(row.iloc[0])
-        print(list)
-        if str(Bgd)=="New CSE":
-            newlist=[]
-            for l in list:
-                if "CC" in l and Floor==str(re.search(r'\d', l).group()):
-                    newlist.append(l)
-            list=newlist       
-            df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
-            print("piyush")
-            data1=df.to_html(index=False,sparsify=False)
-            print(data1)
-            table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
-            .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
-           .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
-            return render_template('Room.html', data2=table_with_styles,flag=True)
-            return render_template('Room.html', data2=df.to_html(),flag=True);
-        if str(Bgd)=="Kresit":
-            newlist=[]
-            for l in list:
-                if "CC" not in l and Floor==str(re.search(r'\d', l).group()):
-                    newlist.append(l)
-            list=newlist
-            df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
-            print("piyush")
-            data1=df.to_html(index=False,sparsify=False)
-            print(data1)
-            table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
-            .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
-           .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
-            return render_template('Room.html', data2=table_with_styles,flag=True)
-            return render_template('Room.html', data2=df.to_html(),flag=True);
+        # list=[]
+        # for i, row in rows.iterrows():
+        #   list.append(row.iloc[0])
+        # print(list)
+        # if str(Bgd)=="New CSE":
+        #     newlist=[]
+        #     for l in list:
+        #         if "CC" in l and Floor==str(re.search(r'\d', l).group()):
+        #             newlist.append(l)
+        #     list=newlist       
+        #     df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
+        #     print("piyush")
+        #     data1=df.to_html(index=False,sparsify=False)
+        #     print(data1)
+        #     table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
+        #     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
+        #    .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
+        #     return render_template('Room.html', data2=table_with_styles,flag=True)
+        #     return render_template('Room.html', data2=df.to_html(),flag=True);
+        # if str(Bgd)=="Kresit":
+        #     newlist=[]
+        #     for l in list:
+        #         if "CC" not in l and Floor==str(re.search(r'\d', l).group()):
+        #             newlist.append(l)
+        #     list=newlist
+        #     df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
+        #     print("piyush")
+        #     data1=df.to_html(index=False,sparsify=False)
+        #     print(data1)
+        #     table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
+        #     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
+        #    .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
+        #     return render_template('Room.html', data2=table_with_styles,flag=True)
+        #     return render_template('Room.html', data2=df.to_html(),flag=True);
             
         
         
-        # column=df['Space Type']
-        # list=[]
-        # for col in len(column):
-        #     if str(column[col])==str(LDAP_ID) and (str(df.iloc[col, 4])=="NA" or str(df.iloc[col, 4])=="vacant") :
-        #         list.append(df.iloc[col, 4])
-        # print(list)       
-        print("piyush")     
+        # # column=df['Space Type']
+        # # list=[]
+        # # for col in len(column):
+        # #     if str(column[col])==str(LDAP_ID) and (str(df.iloc[col, 4])=="NA" or str(df.iloc[col, 4])=="vacant") :
+        # #         list.append(df.iloc[col, 4])
+        # # print(list)       
+        # print("piyush")     
         
 
     return render_template('Room.html', data2=df.to_html(),flag=True)
