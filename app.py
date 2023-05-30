@@ -8,57 +8,44 @@ app = Flask(__name__)
 
 @app.route("/", methods = ['GET', 'POST'])
 def home():
+    # This is master sheet id
     SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
-    # SHEET_ID = ''
     SHEET_NAME = 'Student Data'
+    # Here we are accessing the Sutudent Data sheet which is present in master sheet.
     df_json=''
-    print('HELLO')
+    # make the dataframe as df
     df = pd.DataFrame([])
+    # make these two variable to check some condition.
     p_row=-1
     p_col=-1
     if request.method == "POST":
+        # Here i am taking the value from frontend whose input tag name is ldap_id
         LDAP_ID = request.form['ldap_id']
-        # findin= request.form['find']
+        # Making the variable to check ,checkbox is selected or not
         PIs='off'
         Lab='off'
-        print(f'Before the value of PIS is {PIs}')
-        print(f'Before the value of Lab is {Lab}')
+        # Here we are checking home.html file
         if 'PIs' in request.form:
             PIs = request.form.get('PIs')
-            print(f'the value of PIS is: {PIs}')
-        
         if 'Lab' in request.form:
             Lab= request.form.get('Lab')
-            print(f'the value of Lab is: {Lab}')
-        print(f'After the value of PIS is {PIs}')
-        print(f'After the value of Lab is {Lab}')
-        print(f"here is ldap id {LDAP_ID}")
         gc = gspread.service_account('keys.json')
+        # Here we are taking data from dpreadsheet
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
         rows = worksheet.get_all_records()
-        
-        # print(rows[:5])
-
-        # print('==============================')
-        
+        # make all the selected rows to dataframe
         df = pd.DataFrame(rows)
-        # print(df.head())
+        # Here we are searching row number of particular Ldap id
         for i in range(len(df)):
           if str(df.iloc[i, 0])==str(LDAP_ID):
               p_row=i
-        print(f"This is value of p_row{p_row}")
         if p_row!=-1:
+            # Here we are finding the column value where that row contain 1
             for col in range(df.shape[1]):
                if str(df.iloc[p_row, col])=='1':
-                   p_col=col
-        print(f"This is value of p_col{p_col}")           
-        
+                   p_col=col         
         if p_col!=-1:
-            # if str(findin)=='PI of Student':
-            #     df = pd.DataFrame({'LDAP ID': [LDAP_ID], 'PI of Student': [df.iloc[1, p_col]]})
-            # if str(findin)=='Lab Name':
-            #     df = pd.DataFrame({'LDAP ID': [LDAP_ID],'Lab Name': [df.columns.tolist()[p_col]]})
             if PIs!='off' and Lab!='off':
                 df = pd.DataFrame({'LDAP ID': [LDAP_ID], 'PI of Student': [df.iloc[1, p_col]],'Lab Name': [df.columns.tolist()[p_col]]})
             elif PIs!='off':
@@ -68,11 +55,13 @@ def home():
             
             else:
                 df = pd.DataFrame({'Student Status': ['Select Something'] })
+            # Make the dataframe to html table
             data1=df.to_html(index=False,sparsify=False)
-            # print(data1)
+            # Give some style to table
             table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
     .replace('<td', '<td style="border: 2px solid black;padding: 15px;"')
+            # Flag variable is used by frontend to show to show the data.
             return render_template('home.html', data2=table_with_styles,flag=True)
         df_json = df.to_json(orient='records')
         if p_col==-1:
@@ -85,40 +74,31 @@ def home():
 
 @app.route("/faculty", methods = ['GET', 'POST'])
 def faculty():
+    # This is master sheet id
     SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
-    # SHEET_ID = ''
     SHEET_NAME = 'Faculty Data'
+    # Here we are accessing the Faculty sheet which is present in master sheet.
     df_json=''
-    print('Control come into faculty')
     df = pd.DataFrame([])
     if request.method == "POST":
         LDAP_ID = request.form['ldap_id']
-        # findin = request.form['find']
-        # StudentType=''
-        # if str(findin)=='No of Student':
-        #     StudentType= request.form['StudentType']
-        
-        
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
         rows = worksheet.get_all_records()
-        # print(rows[:5])
-
-        # print('==============================')
         df = pd.DataFrame(rows)
-        print("This is Faculty information")
-        # print(df.head())
         p_row=-1
-        df1 = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]]})
+        # df1 is dataframe 
+        df1 = pd.DataFrame({'Faculty Name': [LDAP_ID]})
+        # we are finding the row for particular faculty name. 
         for i in range(len(df)):
           if str(df.iloc[i, 0])==str(LDAP_ID):
               p_row=i
-        print(f"This is value of p_row {p_row}")
         df_json = df.to_json(orient='records')
         if p_row!=-1:
+            # Check if that particular name checkbox is selected or not.
+            # Here we are checking in Faculty.html file
             if 'Noflab' in request.form:
-                # PIs = request.form.get('Noflab')
                    newdf=pd.DataFrame({ 'No of Labs': [df.iloc[p_row, 1]]})
                    df1 = pd.concat([df1, newdf], axis=1)
             if 'labname' in request.form:
@@ -141,28 +121,9 @@ def faculty():
                    if 'TotalStudent' in request.form:
                        newdf=pd.DataFrame({ 'Total No of Student': [df.iloc[p_row, 3]]})
                        df1 = pd.concat([df1, newdf], axis=1)
-                
-            # if str(findin)=='No of Student':
-            #     if str(StudentType)=="M.tech":
-            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of M.Tech Student': [df.iloc[p_row, 4]]})
-            #     if str(StudentType)=="B.Tech":
-            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of B.tech Student': [df.iloc[p_row, 9]]}) 
-            #     if str(StudentType)=="MS":
-            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of MS Student': [df.iloc[p_row, 10]]})   
-            #     if str(StudentType)=="Phd":
-            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'No of Phd Student': [df.iloc[p_row, 8]]})
-            #     if str(StudentType)=="Total No of Students":
-            #         df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]],'Total No of Student': [df.iloc[p_row, 3]]})   
-            # if str(findin)=='No of Labs':
-            #     print("This is for test purpose")
-            #     df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'No of Labs': [df.iloc[p_row, 1]]})
-            #     print(df)
-            # if str(findin)=='Lab Name':
-            #     df = pd.DataFrame({'Faculty Name': [df.iloc[p_row, 0]], 'Lab Name': [df.iloc[p_row, 2]]})
-            
+            # Make the dataframe to html table
             data1=df1.to_html(index=False,sparsify=False)
-            print("Here data will print ")
-            print(data1)
+            # Give some style to table
             table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
     .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
@@ -172,36 +133,28 @@ def faculty():
 
 @app.route("/lab", methods = ['GET', 'POST'])
 def lab():
+    # This is master sheet id
     SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
-    # SHEET_ID = ''
+    # Here we are accessing two sheet data which is present in master sheet.
     SHEET_NAME = 'Student Data'
     SHEET_NAME2='Room Data'
     df_json=''
-    print('HELLO')
     df = pd.DataFrame([])
     if request.method == "POST":
-        # LDAP_ID = request.form['ldap_id']
-        # findoption = request.form['find']
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
         rows = worksheet.get_all_records()
         worksheet = spreadsheet.worksheet(SHEET_NAME2)
         rows2 = worksheet.get_all_records()
-        # print(rows[:5])
-
-        # print('==============================')
+        
         df = pd.DataFrame(rows)
         df2 = pd.DataFrame(rows2)
-        print(df.head())
+        # The df3 dataframe will use in between the code
+        df3=pd.DataFrame()
+       
         df_json = df.to_json(orient='records')
-        # p_col=-1
-        # for col in range(df.shape[1]):
-        #        if str(df.iloc[0, col])==str(LDAP_ID):
-        #            p_col=col
-        # print(f"This is value of p_row{p_col}")
-        # if p_col!=-1:
-        
+        # Make the list of all lab which are selected 
         Lablist=[]
         if 'CC 402' in request.form:
             Lablist.append('CC 402')
@@ -241,14 +194,13 @@ def lab():
             Lablist.append('SIC 310')
         if 'SIC 313' in request.form:
             Lablist.append('SIC 313')    
-        df3=pd.DataFrame()   
+        
+        # Itereate all the selected lab    
         for LDAP_ID in Lablist:
             new_column = pd.DataFrame({f'Custodian Name': [df[LDAP_ID][0]]})
             new_column2 = pd.DataFrame({f'Lab Name': [LDAP_ID]})
             df1=pd.DataFrame()
-            
-
-            # concatenate the new DataFrame with the empty DataFrame
+            # concatenate one DataFrame to other DataFrame
             df1 = pd.concat([df1, new_column], axis=1)
             df1 = pd.concat([df1, new_column2], axis=1)
             if 'No of PI' in request.form:
@@ -279,36 +231,8 @@ def lab():
                 new_column = pd.DataFrame({f'Available Capacity ': [difference]})
                 df1 = pd.concat([df1, new_column], axis=1)
             df3 = pd.concat([df1, df3], axis=0, ignore_index=True)
-   
-            
-         
-        # if str(findoption)=="No of PI":
-        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]], 'No of PIs': [df[LDAP_ID][2]]})
-        # if str(findoption)=="PI Name":
-        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]], 'PI Name': [df[LDAP_ID][1]]})
-       
-        # if str(findoption)=="No of Total Student":
-        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],
-        #                    'No of Total Student': [df[LDAP_ID][3]]})
-        # if str(findoption)=="No of M.Tech Student":
-        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'M.Tech Student': [df[LDAP_ID][4]]})
-        # if str(findoption)=="No of B.Tech Student":
-        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],
-        #                    'B.Tech Student': [df[LDAP_ID][12]]})
-        # if str(findoption)=="No of MS Student":
-        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'MS Student': [df[LDAP_ID][8]]})
-        # if str(findoption)=="No of Phd Student":
-        #     df = pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],'Phd Student': [df[LDAP_ID][13]]})
-            
-        # if str(findoption)=="Available Capacity of Lab":
-        #     print("xkjvbffkj")
-        #     search_result = df2.loc[df2['Room No.'] == str(LDAP_ID)]
-        #     difference = search_result.iloc[0][6] - search_result.iloc[0][5]
-        #     df=pd.DataFrame({f'Custodian Name of {LDAP_ID}': [df[LDAP_ID][0]],f'Available Capacity ': [difference]})
-            
         
         data1=df3.to_html(index=False,sparsify=False)
-        # print(data1)
         table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
     .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
@@ -316,117 +240,51 @@ def lab():
        
             
     return render_template('Lab.html', data=df.to_html(),Flag=1)
-@app.route("/custodian", methods = ['GET', 'POST'])
-def custodian():
-    SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
-    # SHEET_ID = ''
-    SHEET_NAME = 'Student Data'
-    df_json=''
-    print('HELLO')
-    df = pd.DataFrame([])
-    if request.method == "POST":
-        LDAP_ID = request.form['ldap_id']
-        
-        gc = gspread.service_account('keys.json')
-        spreadsheet = gc.open_by_key(SHEET_ID)
-        worksheet = spreadsheet.worksheet(SHEET_NAME)
-        rows = worksheet.get_all_records()
-        # print(rows[:5])
-
-        # print('==============================')
-        df = pd.DataFrame(rows)
-        
-        print(df.head())
-        df_json = df.to_json(orient='records')
-
-    return render_template('Custodian.html', data=df.to_html())
 @app.route("/status", methods = ['GET', 'POST'])
 def status():
     SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
-    # SHEET_ID = ''
     SHEET_NAME = 'Student Data'
     df_json=''
-    print('HELLO')
     df = pd.DataFrame([])
-    if request.method == "POST":
-        
-        
+    if request.method == "POST": 
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
         rows = worksheet.get_all_records()
-        # print(rows[:5])
-
-        # print('==============================')
         df = pd.DataFrame(rows)
+        # We are just go through the student data sheet data from row 17 to row 761 to find in which row the entire value is zero,that means that student did not feel the form
         start_row = 17
         end_row = 761
-
-# Filter the DataFrame to include only the rows in the specified range with sum of second column onwards >= 1
         filtered_df = df.iloc[start_row:end_row+1][(df.iloc[start_row:end_row+1].iloc[:,1:].sum(axis=1)) >= 1]
-
-# Output the values of the first column for each row in the filtered DataFrame
         list=[]
         for index, row in filtered_df.iterrows():
           list.append(row[0])
         df = pd.DataFrame({'Student Status': list })
         data1=df.to_html(index=False,sparsify=False)
-        print(data1)
         table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
     .replace('<td', '<td style="border: 2px solid black;padding: 15px;"')
         return render_template('status.html', data2=table_with_styles,flag=True)
-        df_json = df.to_json(orient='records')
-        if p_col==-1:
-            df = pd.DataFrame({'Student Status': ['Student Record Not Found'] })
-            return render_template('home.html', data=df.to_html(),flag=False)
-         
-        
-
-# select first column if sum of values from second column to last column is greater than 0, starting from start_row
-#         selected_col = []
-#         for index, row in df.iterrows():
-#           if index >= start_row and row.iloc[1:].sum() > 0:
-#             selected_col.append(row.iloc[0])
-
-# # add selected column as a new column to the dataframe
-#         df['selected_col'] = selected_col
-#         print(selected_col)
-            # return render_template('home.html', data2=df.to_html(),flag=True)
     return render_template('Status.html', data2=df.to_html(),flag=1)
 @app.route("/room", methods = ['GET', 'POST'])
 def room():
+    # Accessing the Room Data sheet from master sheet
     SHEET_ID = '1pbTLKnkCcDuMIoejs_mWW8SnZVW5_Eqgk2Qs1oZgQqk'
-    # SHEET_ID = ''
     SHEET_NAME = 'Room Data'
     df_json=''
-    print('HELLO')
     df = pd.DataFrame([])
     if request.method == "POST":
-        # LDAP_ID = request.form['ldap_id']
-        # Floor = request.form['floor']
-        # Bgd = request.form['bgd']
         gc = gspread.service_account('keys.json')
         spreadsheet = gc.open_by_key(SHEET_ID)
         worksheet = spreadsheet.worksheet(SHEET_NAME)
         rows = worksheet.get_all_records()
-        # print(rows[:5])
-
-        # print('==============================')
         df = pd.DataFrame(rows)
-        final=[]
-        
-        
+        # Make empty dataframe which is used in between the code
         finaldf = pd.DataFrame([])
         finaldf2 = pd.DataFrame([])
         finaldf3 = pd.DataFrame([])
-        # print(df.head())
         df_json = df.to_json(orient='records')
-        # LDAP_ID='Seminar Hall'
-        #     rows = df[(df.iloc[:, 2] == str(LDAP_ID)) & (df.iloc[:, 4].isin(['N/A', 'Vacant']))]
-        #     final.append(rows)
-        
-        
+        # Here we are checking which room type is selected ,if selected take all room from sheet. 
         if 'Seminar Hall' in request.form:
             print("Enter in seminar hall")
             classifications = {
@@ -559,108 +417,69 @@ def room():
                    classifications["seminar"].append(row)  
             seminar_df = pd.DataFrame(classifications["seminar"])
             finaldf = finaldf.append(seminar_df, ignore_index=True)
-        print(finaldf)
+        # Here we are just replacing the df to finaldf
         df=finaldf
-        if df.empty:
-            return render_template('Room.html', data2=df.to_html(),flag=True)
+        # Here we are checking which building is selected
         if 'New CSE' in request.form:
+            # We are filtering data from df by just checking if room number start with 'CC' then that room belong into new cse otherwise belong to kresit.
             new_df = df[df.iloc[:, 0].str.contains('CC')]
             finaldf2 = finaldf2.append(new_df, ignore_index=True)
-            print("new cse sleectde")
         if 'Kresit' in request.form:
             new_df = df[~df.iloc[:, 0].str.contains('CC')]
             finaldf2 = finaldf2.append(new_df, ignore_index=True)
-            print("new cse sleectde")
+        # Here we are just replacing the df to finaldf2
         df=finaldf2
+        # If df is empty the return 
         if df.empty:
             return render_template('Room.html', data2=df.to_html(),flag=True)
+        # Here we are finding which floor is selected
         if 'floorB' in request.form:
+            # Here we just check if room ending of room number string is 'B' then that room is selected.
             selected_rows = df[df.iloc[:, 0].astype(str).str.extract(r'(\D)(\d*)$')[0] == 'B']
             finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
         if 'floorG' in request.form:
+            # Here we just check if room ending of room number string is 'G' then that room is selected.
             selected_rows = df[df.iloc[:, 0].astype(str).str.extract(r'(\D)(\d*)$')[0] == 'G']
             finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
         if 'floor1' in request.form:
+             # Here we just checking, starting number digit is 1,then that room will select.
             selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b1', x) is not None)]
-            print("selected row:::")
-            print(selected_rows)
             finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
-            print(finaldf3)
         if 'floor2' in request.form:
+            # Here we just checking, starting number digit is 2,then that room will select.
             selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b2', x) is not None)]
             print("selected row:::")
             print(selected_rows)
             finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
             print(finaldf3)
         if 'floor3' in request.form:
+            # Here we just checking, starting number digit is 3,then that room will select.
             selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b3', x) is not None)]
             finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
         if 'floor4' in request.form:
+            # Here we just checking, starting number digit is 4,then that room will select.
             selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b4', x) is not None)]
             finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
         if 'floor5' in request.form:
+            # Here we just checking, starting number digit is 5,then that room will select.
             selected_rows = df[df.iloc[:, 0].astype(str).apply(lambda x: re.search(r'\b5', x) is not None)]
             finaldf3 = finaldf3.append(selected_rows, ignore_index=True)
         df=finaldf3
         if df.empty:
             return render_template('Room.html', data2="<h1> Data Not found </h1>",flag=True)
+        # Here we are filering if selected room till now is either "vacant" or "N/A" then only that type of room will select
         selected_rows = df[(df.iloc[:, 4] == "vacant") | (df.iloc[:, 4] == "N/A")]
         df=selected_rows
+        # Select particular column from dataframe df
         selected_columns = df[['Room No.', 'Common Name']]
         df=selected_columns
+        # Convert dataframe to html table
         data1=df.to_html(index=False,sparsify=False)
         # print(data1)
         table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
             .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
            .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
         return render_template('Room.html', data2=table_with_styles,flag=True)
-        # row = df[df.iloc[:, 2] == ]
-        # if not row.empty and row.iloc[0, 4] in ['N/A', 'Vacant']:
-        #     print(row.iloc[0, 0])
-        # list=[]
-        # for i, row in rows.iterrows():
-        #   list.append(row.iloc[0])
-        # print(list)
-        # if str(Bgd)=="New CSE":
-        #     newlist=[]
-        #     for l in list:
-        #         if "CC" in l and Floor==str(re.search(r'\d', l).group()):
-        #             newlist.append(l)
-        #     list=newlist       
-        #     df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
-        #     print("piyush")
-        #     data1=df.to_html(index=False,sparsify=False)
-        #     print(data1)
-        #     table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
-        #     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
-        #    .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
-        #     return render_template('Room.html', data2=table_with_styles,flag=True)
-        #     return render_template('Room.html', data2=df.to_html(),flag=True);
-        # if str(Bgd)=="Kresit":
-        #     newlist=[]
-        #     for l in list:
-        #         if "CC" not in l and Floor==str(re.search(r'\d', l).group()):
-        #             newlist.append(l)
-        #     list=newlist
-        #     df = pd.DataFrame({f'Vacant {LDAP_ID} ': list});
-        #     print("piyush")
-        #     data1=df.to_html(index=False,sparsify=False)
-        #     print(data1)
-        #     table_with_styles = data1.replace('<table', '<table style="border: 2px solid black;padding: 15px;"') \
-        #     .replace('<th', '<th style="text-align: center;border-collapse: collapse;"') \
-        #    .replace('<td', '<td style="border: 2px solid black;padding: 30px;"')
-        #     return render_template('Room.html', data2=table_with_styles,flag=True)
-        #     return render_template('Room.html', data2=df.to_html(),flag=True);
-            
-        
-        
-        # # column=df['Space Type']
-        # # list=[]
-        # # for col in len(column):
-        # #     if str(column[col])==str(LDAP_ID) and (str(df.iloc[col, 4])=="NA" or str(df.iloc[col, 4])=="vacant") :
-        # #         list.append(df.iloc[col, 4])
-        # # print(list)       
-        # print("piyush")     
         
 
     return render_template('Room.html', data2=df.to_html(),flag=True)
